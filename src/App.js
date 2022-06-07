@@ -18,7 +18,10 @@ const App = () => {
         console.log("We have the Ethereum Object", ethereum);
       }
       /*
-      * Check if we're authorized to access the user's wallet
+      * Check if we're authorized to access the user's wallet so that 
+      * user can login with their wallet.
+      * Here we use a special method called: "eth_acounts" to see 
+      * if we are authorized to access the user's wallet.
       */
       const accounts = await ethereum.request({ method: "eth_accounts" });
 
@@ -35,7 +38,12 @@ const App = () => {
       console.log(error);
     }
   }
-
+/*
+* Here we use the eth_requestAccounts method to get the users public wallet.
+* And we only show the connectWallet button if we dont have a currentAccount.
+* if we have a currentAccount, then we already have access to an 
+* authorized account in the users waller. 
+*/
   const connectWallet = async () => {
 
     try {
