@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
+//ethers is a library that lets our frontend talk to our smart contract.
+import { ethers } from "etheres";
 import "./App.css";
+import abi from "./utils/WavePortal.json";
+
 
 const App = () => {
   /*
   * Just a state variable we use to store our user's public wallet.
   */
   const [currentAccount, setCurrentAccount] = useState("");
+
+  const contractAddress = "0xAe297Bd28cF210c9A23C5e3abfFC43F75aeceAD4";
+  
+  const contractABI = abi.abi;
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -63,6 +71,30 @@ const App = () => {
       console.log(error);
     }
   }
+
+  const wave = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (ethereum) {
+        // a provider is what we use to actually talk to the ethereum nodes.
+        // alchemy for example is being used here as the provider.
+        const provider = new ethers.provider.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        let count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", count.toNumber());
+      }
+      else {
+        console.log("Ethereum object does not exist!");
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   /*
   * This runs our function when the page loads.
   */
@@ -81,7 +113,7 @@ const App = () => {
           I am Nadimul and this is my first Web3.0 project where I learn to create smart contracts. Connect your Ethereum wallet and wave at me!
         </div>
 
-        <button className="waveButton" onClick={null}>
+        <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
 
